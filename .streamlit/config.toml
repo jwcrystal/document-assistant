@@ -1,2 +1,4 @@
 [server]
 fileWatcherType = "none"
+maxUploadSize = 200  # MB
+enableCORS = false

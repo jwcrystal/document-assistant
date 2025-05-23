@@ -53,9 +53,16 @@ def main():
     # 拖曳上傳區域
     # 更新支援的文件類型列表
     uploaded_file = st.file_uploader("拖曳文件至此", type=["pdf", "png", "jpg", "jpeg", "docx", "pptx", "xlsx", "html", "md"], label_visibility="collapsed")
+    
     # 即時預覽面板
     if uploaded_file:
         st.subheader("📄 即時預覽")
+
+        # 輸出除錯資訊
+        st.write(f"原始檔名: {uploaded_file.name}")
+        st.write(f"文件大小: {len(uploaded_file.getvalue())} bytes")
+        st.write(f"文件類型: {uploaded_file.type}")
+
         with tempfile.NamedTemporaryFile(delete=False, suffix=sanitize_filename(os.path.splitext(uploaded_file.name)[1])) as tmp:
             tmp.write(uploaded_file.getvalue())
             tmp_path = tmp.name
