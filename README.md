@@ -1,85 +1,116 @@
-# Document OCR Assistant
+# Document Assistant
+
+[中文版](README_zh.md)
 
 ## Project Description
 
-This project provides a simple Streamlit application for performing OCR on various document types, including PDF, PNG, JPG, JPEG, and DOCX. It utilizes the `docling` library for document conversion and OCR processing.
+A modern document processing application built with NiceGUI that supports preview and OCR text recognition for various file formats. The application provides an intuitive user interface for uploading, previewing documents, and converting document content into editable text format.
 
 ## Features
 
-- **File Upload:** Easily upload PDF, image (PNG, JPG, JPEG), and DOCX files.
-- **Real-time Preview:** View a preview of the uploaded document directly in the application.
-- **OCR Processing:** Extract text content from the uploaded documents using OCR.
-- **Markdown Output:** Get the OCR results formatted in Markdown.
-- **Download Results:** Download the OCR results as a Markdown file.
+- **Multiple Format Support**: PDF, Word (DOCX/DOC), PowerPoint (PPTX/PPT), Excel (XLSX/XLS), Images (PNG/JPG/JPEG), Markdown, and HTML files
+- **Real-time Preview**: Instantly preview uploaded documents
+- **OCR Text Recognition**: Extract text content from images and PDFs
+- **Markdown Output**: Format recognition results in Markdown
+- **Download Functionality**: Save processed results as Markdown files
+- **Responsive Design**: Adapts to different screen sizes
 
 ## Installation
 
-1. **Clone the repository:**
+1. **Clone the repository**
 
     ```bash
     git clone <repository_url>
     cd document-assistant
     ```
 
-2. **Create a virtual environment (recommended):**
+2. **Create a virtual environment (recommended)**
 
     ```bash
     python -m venv venv
     source venv/bin/activate  # On Windows use `venv\Scripts\activate`
     ```
 
-3. **Install dependencies:**
+3. **Install dependencies**
 
     ```bash
     pip install -r requirements.txt
     ```
 
-4. **Install LM Studio (if using the LLM feature):**
-    If you plan to use the LLM-based OCR processing (`test_docling_llm.py`), you will need to install and run LM Studio and load a compatible model (e.g., `internvl3-8b-instruct` or `internvl3-2b`). Refer to the LM Studio documentation for installation and usage details.
-
 ## Usage
 
-1. **Run the Streamlit application:**
+1. **Run the application**
 
     ```bash
-    streamlit run app.py
+    python app_new.py
     ```
 
-2. Open your web browser and go to the provided local URL (usually `http://localhost:8501`).
+2. Open your web browser and navigate to the displayed local URL (typically `http://localhost:8080`)
 
-3. Drag and drop your document file into the designated area.
+3. Click the "Select File" button or drag and drop a file into the upload area
 
-4. Click the "執行 OCR" (Execute OCR) button to start the process.
+4. After uploading, you can preview the document content on the page
 
-5. View the OCR results in the application and use the "下載結果" (Download Result) button to save the Markdown output.
+5. Click the "Run OCR Recognition" button to start processing the document
+
+6. After processing is complete, view the text recognition results and use the "Download Markdown" button to save the results
+
+## Supported File Formats
+
+| File Type           | Extensions         | Preview Supported | OCR Supported |
+|---------------------|--------------------|-------------------|---------------|
+| PDF File (Text-based)| .pdf              | Yes               | Yes           |
+| Word Document       | .docx, .doc        | Yes               | Yes           |
+| PowerPoint          | .pptx, .ppt        | Yes               | Yes           |
+| Excel File          | .xlsx, .xls        | Yes               | Yes           |
+| CSV File            | .csv               | Yes               | Yes           |
+| Image File          | .png, .jpg, .jpeg  | Yes               | Yes           |
+| Markdown            | .md, .markdown     | Yes               | Yes           |
+| HTML File           | .html, .htm        | Yes               | Yes           |
 
 ## Project Structure
 
 ```sh
-ocr_extension/
-├── .gitignore
-├── app.py          # Streamlit application
-├── output/         # Output directory for results
-├── test/           # Test files
-│   ├── BBG-How to Deploy Services.jpg
-│   └── 伺服器現況概述.pdf
-├── test_docling.py # Example using basic docling conversion
-├── test_docling_llm.py # Example using docling with LM Studio VLM
-└── README.md       # Project README file
+document-assistant/
+├── app_new.py          # Main application (NiceGUI)
+├── app.py             # Legacy Streamlit application
+├── test_docling.py     # Docling test script
+├── test_docling_llm.py # Docling with LM Studio integration test
+├── temp_uploads/       # Temporary upload directory
+├── output/             # Output directory
+├── requirements.txt    # Dependencies list
+└── README.md          # Project documentation
 ```
 
-## Contributing
+## Technology Stack
 
-Contributions are welcome! Please feel free to submit pull requests or report issues.
+- **Frontend Framework**: [NiceGUI](https://nicegui.io/)
+- **PDF Processing**: PyMuPDF (fitz)
+- **Office Document Processing**:
+  - python-docx (Word)
+  - openpyxl (Excel)
+  - python-pptx (PowerPoint)
+  - pandas (CSV)
+- **Text Processing**: Python Standard Library
 
 ## License
 
 This project is licensed under the MIT License.
 
-## Acknowledgements
+## Contributing
 
-- [docling library](https://github.com/docling/docling)
-- [Streamlit](https://streamlit.io/)
-- [PyMuPDF](https://pymupdf.readthedocs.io/)
-- [python-docx](https://python-docx.readthedocs.io/)
-- [LM Studio](https://lmstudio.ai/)
+Contributions are welcome! Please feel free to submit pull requests or report issues.
+
+## Todo List
+
+- [ ] Support more file formats
+- [ ] Improve handling of non-English documents
+- [ ] Add LLM integration for document analysis
+- [ ] Optimize performance for large files
+- [ ] Add batch processing functionality
+
+## Notes
+
+- Uploaded files are temporarily stored in the `temp_uploads` directory and will be automatically cleared when the application is closed
+- Maximum single file size is limited to 200MB
+- Recommended to use in a stable network environment, especially when processing large files
