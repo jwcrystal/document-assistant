@@ -51,7 +51,8 @@ def main():
     st.title("📄 Document Assistant")
 
     # 拖曳上傳區域
-    uploaded_file = st.file_uploader("拖曳文件至此", type=["pdf", "png", "jpg", "jpeg", "docx"], label_visibility="collapsed")
+    # 更新支援的文件類型列表
+    uploaded_file = st.file_uploader("拖曳文件至此", type=["pdf", "png", "jpg", "jpeg", "docx", "pptx", "xlsx", "html", "md"], label_visibility="collapsed")
     # 即時預覽面板
     if uploaded_file:
         st.subheader("📄 即時預覽")
@@ -60,6 +61,7 @@ def main():
             tmp_path = tmp.name
         
         # 顯示預覽
+        # 針對不同文件類型添加預覽邏輯
         if uploaded_file.type.startswith("image/"):
             st.image(tmp_path, caption="即時預覽", use_container_width=True)
         elif uploaded_file.type == "application/pdf":
@@ -82,7 +84,6 @@ def main():
                     # 頁面切換按鈕和頁碼文字
                     # 創建三欄：左邊按鈕，中間頁碼，右邊按鈕
                     col1, col2, col3 = st.columns([1, 2, 1]) # 調整比例使中間欄寬度更大
-
                     with col1:
                         if st.session_state.pdf_page > 0: # 只有當不是第一頁時才顯示上一頁按鈕
                             if st.button("上一頁"):
@@ -90,11 +91,9 @@ def main():
                                 st.rerun() # 重新運行以更新顯示
                         else:
                             st.empty() # 在第一頁時留空，保持佈局一致
-
                     with col2:
                         # 顯示頁碼文字並居中
                         st.markdown(f"<div class='centered-text'>PDF 頁面 {st.session_state.pdf_page + 1} / {total_pages}</div>", unsafe_allow_html=True)
-
                     with col3:
                         if st.session_state.pdf_page < total_pages - 1: # 只有當不是最後一頁時才顯示下一頁按鈕
                             if st.button("下一頁"):
@@ -102,18 +101,62 @@ def main():
                                 st.rerun() # 重新運行以更新顯示
                         else:
                             st.empty() # 在最後一頁時留空，保持佈局一致
-
-
             except Exception as e:
-                 st.error(f"無法預覽 PDF: {str(e)}")
-
+                st.error(f"無法預覽 PDF: {str(e)}")
         elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
             # 使用 python-docx 顯示 Word 預覽
             doc = DocxDocument(tmp_path)
             for para in doc.paragraphs:
                 st.markdown(f"> {para.text}")
+        elif uploaded_file.type == "text/markdown":
+            # 顯示 Markdown 預覽
+            try:
+                with open(tmp_path, "r", encoding="utf-8") as f:
+                    md_content = f.read()
+                st.markdown(md_content) # Streamlit 直接支援 Markdown 渲染
+            except Exception as e:
+                st.error(f"無法預覽 Markdown 文件: {str(e)}")
+        elif uploaded_file.type == "text/html":
+            # 顯示 HTML 預覽
+            try:
+                with open(tmp_path, "r", encoding="utf-8") as f:
+                    html_content = f.read()
+                st.markdown(html_content, unsafe_allow_html=True) # 使用 unsafe_allow_html=True 渲染 HTML
+            except Exception as e:
+                st.error(f"無法預覽 HTML 文件: {str(e)}")
+        elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.presentationml.presentation":
+            # 顯示 PowerPoint 預覽
+            # st.info("PowerPoint (.pptx) 預覽功能尚未實作，需要安裝額外函式庫 (如 python-pptx) 並實作解析邏輯。")
+            from pptx import Presentation
+            try:
+                prs = Presentation(tmp_path)
+                for i, slide in enumerate(prs.slides):
+                    st.markdown(f"### 投影片 {i+1}")
+                    for shape in slide.shapes:
+                        if hasattr(shape, "text"):
+                            st.markdown(f"> {shape.text}")
+            except Exception as e:
+                st.error(f"無法讀取 PowerPoint 文件: {str(e)}")
+        elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+            # 顯示 Excel 預覽
+            # st.info("Excel (.xlsx) 預覽功能尚未實作，需要安裝額外函式庫 (如 openpyxl 或 pandas) 並實作解析邏輯。")
+            from openpyxl import load_workbook
+            try:
+                wb = load_workbook(tmp_path)
+                for sheet in wb:
+                    st.markdown(f"### 工作表：{sheet.title}")
+                    for row in sheet.iter_rows():
+                        st.markdown(" | ".join([str(cell.value) for cell in row]))
+            except Exception as e:
+                st.error(f"無法讀取 Excel 文件: {str(e)}")
+        else:
+            # 對於其他未處理的檔案類型，顯示提示
+            st.info(f"目前不支援預覽 {uploaded_file.type} 格式的文件。")
+
 
         # OCR 處理
+        # 注意：OCR 處理是否支援新增格式取決於 docling 函式庫
+        # TODO: 支援 LLM
         if st.button("執行 OCR"):
             # 顯示處理進度
             progress_bar = st.progress(0)
@@ -127,6 +170,7 @@ def main():
                 # 初始化Docling轉換器
                 converter = DocumentConverter()
                 # 執行文件轉換 (這是同步操作，會阻塞直到完成)
+                # docling 是否支援新增格式需要確認
                 result = converter.convert(tmp_path)
                 
                 # 如果轉換成功，更新狀態文字和進度條
