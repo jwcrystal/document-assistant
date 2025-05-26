@@ -72,39 +72,51 @@ A modern document processing application built with NiceGUI that supports previe
 
 ```sh
 document-assistant/
-├── app_new.py          # Main application (NiceGUI)
-├── app.py             # Legacy Streamlit application
-├── test_docling.py     # Docling test script
-├── test_docling_llm.py # Docling with LM Studio integration test
-├── temp_uploads/       # Temporary upload directory
-├── output/             # Output directory
-├── requirements.txt    # Dependencies list
-└── README.md          # Project documentation
+├── app.py (old)           # Legacy main application (before refactoring)
+├── src/                   # Source code directory
+│   ├── config/            # Configuration modules and settings
+│   ├── services/          # Business logic services
+│   │   └── ocr/           # OCR-related service modules
+│   │       └── ocr_service.py
+│   ├── ui/                # User interface modules
+│   │   ├── components/    # Reusable UI components
+│   │   │   ├── ocr_result_dialog.py  # Dialog for displaying OCR results
+│   │   │   └── preview.py            # Document preview component
+│   │   └── main_ui.py     # Main user interface
+│   └── utils/             # Utility functions and helper modules
+│       ├── __init__.py
+│       ├── file_utils.py  # File handling utility functions
+│       └── app.py         # Main application entry point (after refactoring)
+│
+├── static/                # Static resources (e.g., CSS, images)
+├── temp_uploads/          # Temporary storage directory for uploaded files
+├── test/                  # Test code directory
+├── output/                # Output results storage directory
+├── .gitignore             # Git ignore list
+├── README.md              # Project description (English)
+├── README_zh.md           # Project description (Chinese)
+└── requirements.txt       # Python dependency list
+
 ```
 
-## Technology Stack
+## Tech Stack
 
-- **Frontend Framework**: [NiceGUI](https://nicegui.io/)
-- **PDF Processing**: PyMuPDF (fitz)
+- **Frontend Framework**: NiceGUI  
+- **PDF Processing**: PyMuPDF (fitz)  
 - **Office Document Processing**:
-  - python-docx (Word)
-  - openpyxl (Excel)
-  - python-pptx (PowerPoint)
-  - pandas (CSV)
+  - python-docx (Word)  
+  - openpyxl (Excel)  
+  - python-pptx (PowerPoint)  
 - **Text Processing**: Python Standard Library
 
 ## License
 
 This project is licensed under the MIT License.
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit pull requests or report issues.
-
 ## Todo List
 
-- [ ] Support more file formats
-- [ ] Improve handling of non-English documents
+- [x] Support more file formats
+- [x] Improve handling of non-English documents
 - [ ] Add LLM integration for document analysis
 - [ ] Optimize performance for large files
 - [ ] Add batch processing functionality
