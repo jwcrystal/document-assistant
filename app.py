@@ -137,7 +137,7 @@ async def handle_upload(e):
                 os.unlink(tmp_path)
             raise ex
         
-        # 顯示文件信息
+        # 顯示文件訊息
         file_info_text = f"""
         ### 文件資訊
         - 原始檔名: {file_name}
