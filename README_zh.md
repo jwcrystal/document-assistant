@@ -1,19 +1,19 @@
-# 文件助手 (Document Assistant)
+# 文件助手
 
 ## 專案描述
 
-這是一個基於 NiceGUI 的文件處理應用程式，支援多種文件格式的預覽和 OCR 文字辨識。應用程式提供直觀的用戶界面，方便用戶上傳、預覽文件，並將文件內容轉換為可編輯的文字格式。
+一個基於 NiceGUI 構建的現代化文件處理應用程序，支援多種文件格式的預覽和 OCR 文字辨識。應用程序提供直觀的用戶介面，用於上傳、預覽文檔，並將文檔內容轉換為可編輯的文字格式。
 
 ## 功能特點
 
-- **多格式支援**：支援 PDF、Word (DOCX/DOC)、PowerPoint (PPTX/PPT)、Excel (XLSX/XLS)、圖片 (PNG/JPG/JPEG)、Markdown 和 HTML 文件
-- **即時預覽**：上傳後可立即預覽文件內容
+- **多格式支援**：PDF、Word (DOCX/DOC)、PowerPoint (PPTX/PPT)、Excel (XLSX/XLS)、圖片 (PNG/JPG/JPEG)、Markdown 和 HTML 文件
+- **即時預覽**：即時預覽上傳的文檔
 - **OCR 文字辨識**：從圖片和 PDF 中提取文字內容
-- **Markdown 輸出**：將辨識結果格式化為 Markdown 格式
-- **下載功能**：將處理結果下載為 Markdown 文件
-- **響應式設計**：自適應不同螢幕尺寸
+- **Markdown 輸出**：將辨識結果格式化為 Markdown
+- **下載功能**：將處理結果保存為 Markdown 文件
+- **響應式設計**：適配不同螢幕尺寸
 
-## 安裝
+## 安裝指南
 
 1. **克隆存儲庫**
 
@@ -22,14 +22,14 @@
     cd document-assistant
     ```
 
-2. **建立虛擬環境（建議）**
+2. **創建虛擬環境（推薦）**
 
     ```bash
     python -m venv venv
-    source venv/bin/activate  # Windows 系統使用 `venv\Scripts\activate`
+    source venv/bin/activate  # Windows 使用 `venv\Scripts\activate`
     ```
 
-3. **安裝依賴套件**
+3. **安裝依賴**
 
     ```bash
     pip install -r requirements.txt
@@ -37,53 +37,64 @@
 
 ## 使用說明
 
-1. **啟動應用程式**
+1. **運行應用程序**
 
     ```bash
-    python app_new.py
+    python -m src.app
     ```
 
-2. 打開網頁瀏覽器，訪問顯示的本地網址（通常是 `http://localhost:8080`）
+2. 打開網頁瀏覽器，訪問顯示的本地 URL（通常是 `http://localhost:8080`）
 
-3. 點擊「選擇文件」按鈕或直接拖放文件到上傳區域
+3. 點擊「選擇文件」按鈕或將文件拖放到上傳區域
 
-4. 上傳完成後，可以在頁面上預覽文件內容
-
-5. 點擊「執行 OCR 辨識」按鈕開始處理文件
-
-6. 處理完成後，可以查看文字辨識結果並使用「下載 Markdown」按鈕保存結果
+4. 預覽或是辨識文件
 
 ## 支援的文件格式
 
-| 文件類型 | 副檔名 | 預覽支援 | OCR 支援 |
-|---------|-------|---------|---------|
-| PDF 文件（純文字） | .pdf  | 是   | 是   |
-| Word 文件 | .docx, .doc | 是 | 是 |
-| PowerPoint | .pptx, .ppt | 是 | 是 |
-| Excel 文件 | .xlsx, .xls | 是 | 是 |
-| CSV 文件 | .csv | 是 | 是 |
-| 圖片文件 | .png, .jpg, .jpeg | 是 | 是 |
-| Markdown | .md, .markdown | 是 | 是 |
-| HTML 文件 | .html, .htm | 是 | 是 |
-
+| 文件類型           | 副檔名            | 預覽支援 | OCR 支援 |
+| ------------------ | ----------------- | -------- | -------- |
+| PDF 文件（純文字） | .pdf              | 是       | 是       |
+| Word 文件          | .docx, .doc       | 是       | 是       |
+| PowerPoint         | .pptx, .ppt       | 是       | 是       |
+| Excel 文件         | .xlsx, .xls       | 是       | 是       |
+| CSV 文件           | .csv              | 是       | 是       |
+| 圖片文件           | .png, .jpg, .jpeg | 是       | 是       |
+| Markdown           | .md, .markdown    | 是       | 是       |
+| HTML 文件          | .html, .htm       | 是       | 是       |
 
 ## 專案結構
 
 ```sh
 document-assistant/
-├── app_new.py          # 主應用程式 (NiceGUI)
-├── app.py             # 舊版 Streamlit 應用程式
-├── test_docling.py     # Docling 測試腳本
-├── test_docling_llm.py # Docling 與 LM Studio 整合測試
-├── temp_uploads/       # 臨時上傳文件目錄
-├── output/             # 輸出目錄
-├── requirements.txt    # 依賴套件列表
-└── README.md          # 專案說明文件
+├── app.py (old)           # 重構前的主應用程式入口
+├── src/                   # 源代碼目錄
+│   ├── config/            # 配置相關模組與設定檔
+│   ├── services/          # 業務邏輯模組
+│   │   └── ocr/           # OCR 相關服務邏輯
+│   │       └── ocr_service.py
+│   ├── ui/                # 用戶介面模組
+│   │   ├── components/    # 可重用的 UI 組件
+│   │   │   ├── ocr_result_dialog.py  # OCR 結果顯示對話框
+│   │   │   └── preview.py            # 文件預覽組件
+│   │   └── main_ui.py     # 主用戶介面程式
+│   └── utils/             # 工具函數與輔助模組
+│   │   ├── __init__.py
+│   │   └── file_utils.py  # 文件處理相關工具函數
+│   └── app.py         		 # 主應用程式入口（重構後）
+│
+├── static/                # 靜態資源（如 CSS、圖片等）
+├── temp_uploads/          # 上傳文件的臨時存儲目錄
+├── test/                  # 測試程式碼目錄
+├── output/                # 輸出結果存放目錄
+├── .gitignore             # Git 版控忽略清單
+├── README.md              # 專案英文說明文件
+├── README_zh.md           # 專案中文說明文件
+└── requirements.txt       # Python 依賴套件列表
 ```
 
 ## 技術棧
 
-- **前端框架**: [NiceGUI](https://nicegui.io/)
+- **前端框架**: NiceGUI
 - **PDF 處理**: PyMuPDF (fitz)
 - **Office 文件處理**: 
   - python-docx (Word)
@@ -94,10 +105,6 @@ document-assistant/
 ## 授權
 
 本專案採用 MIT 授權條款。
-
-## 貢獻
-
-歡迎提交 Pull Request 或回報問題。
 
 ## 待辦事項
 
